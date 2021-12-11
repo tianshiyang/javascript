@@ -1,4 +1,5 @@
 // 深拷贝
+// 方式1
 function deepClone(data) {
   let result;
   if (data === null || data === undefined) {
@@ -23,6 +24,10 @@ function deepClone(data) {
   }
   return result;
 }
+
+// 方式2
+// JSON.parse(JSON.stringify())
+// 缺点：它是不可以拷贝 undefined ， function， RegExp 等等类型的
 
 // test
 let obj = {
