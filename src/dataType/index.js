@@ -23,8 +23,9 @@ function Foo() {}
 const foo = new Foo();
 const number = new Number(1);
 
-console.log(foo instanceof Foo); // true
-console.log(number instanceof Number); // true
+console.log("foo instanceof Foo" + foo instanceof Foo); // true
+console.log("null instanceof Object ====" + null instanceof Object);
+console.log("number instanceof Number" + number instanceof Number); // true
 console.log(123 instanceof Number); // false -> 不能判断字面量的基本数据类型
 console.log(number); // [Number: 1]
 
