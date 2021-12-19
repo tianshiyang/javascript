@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>debounce</title>
+    <style>
+      #box {
+        width: 1000px;
+        height: 500px;
+        background: #ccc;
+        font-size: 40px;
+        text-align: center;
+        line-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+  </body>
+  <script>
+    const box = document.getElementById("box");
+    box.onmousemove = throttling(function (e) {
+      box.innerHTML = `${e.clientX}, ${e.clientY}`;
+    }, 1000);
+    function throttling(func, wait) {
+      let run = true;
+      return function () {
+        if (!run) {
+          return;
+        } else {
+          run = false;
+        }
+        setTimeout(() => {
+          func.apply(this, arguments);
+          run = true;
+        }, wait);
+      };
+    }
+  </script>
+</html>

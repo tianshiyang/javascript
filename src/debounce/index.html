@@ -20,7 +20,6 @@
   <script>
     const box = document.getElementById("box");
     box.onmousemove = debounce(function (e) {
-      console.log(e);
       box.innerHTML = `${e.clientX}, ${e.clientY}`;
     }, 500);
 
