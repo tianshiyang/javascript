@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul id="ul">
+      <li class="one">张三</li>
+      <li class="two">李四</li>
+      <li class="three">王五</li>
+      <li class="four">赵六</li>
+      <li class="five">田七</li>
+    </ul>
+  </body>
+  <script>
+    // 事件委托
+    document.getElementById("ul").addEventListener("click", (e) => {
+      e.target.innerHTML = "123";
+    });
+  </script>
+</html>

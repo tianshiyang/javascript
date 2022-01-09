@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>es5继承</title>
+  </head>
+  <body>
+    <!-- <h1>继承</h1> -->
+  </body>
+  <script>
+    // // 1. call方式实现继承
+    // // 优点：实现继承属性，但值都不相同
+    // // 缺点：无法继承父级类别中原型上的方法
+    // function Person(name, age) {
+    //   this.name = name;
+    //   this.age = age;
+    // }
+    // Person.prototype.say = () => {
+    //   console.log(this + "sayHi");
+    // };
+    // function Student(name, age, education) {
+    //   console.log("student 执行了");
+    //   Person.call(this, name, age);
+    //   this.education = education;
+    // }
+    // Student.prototype = new Person();
+    // Student.prototype.play = () => {
+    //   console.log("student Play");
+    // };
+    // let stu = new Student("张三", 20, "本科");
+    // console.log(stu.__proto__); // person (Student.prototype = new Person();改变了Student的原型)
+    // console.log(stu.play()); // student Play
+
+    // prototype 实现继承
+    // 优点：继承了父级原型上的方法
+    // 缺点：实例化多个Student 都必须共用相同的name 和 age
+    // function Person(name, age) {
+    //   this.name = name;
+    //   this.age = age;
+    // }
+    // Person.prototype.say = () => {
+    //   console.log("person say");
+    // };
+    // function Student(education) {
+    //   this.education = education;
+    // }
+    // Student.prototype = new Person("张三", 20);
+    // Student.prototype.constructor = Student; // 改变原型 构造函数指向
+    // let stu = new Student("本科");
+    // console.log(stu.name, stu.education); // 张三 本科
+    // console.log(stu);
+    // stu.say(); // person say
+    // console.log(stu.__proto__.constructor === Student); // true
+
+    // 组合继承
+    // 具有call 和 prototype两个的优点
+    // function Person(name, age) {
+    //   this.name = name
+    //   this.age = age
+    // }
+    // Person.prototype.say = () => {
+    //   console.log("person say")
+    // }
+    // function Student(education, name, age) {
+    //   Person.call(this, name, age)
+    //   this.education = education
+    // }
+    // Student.prototype = new Person()
+    // Student.prototype.play = () => {
+    //   console.log("student play")
+    // }
+    // let stu = new Student("123", "zhangsan", 20)
+    // stu.say()
+    // stu.play()
+
+    // 拷贝继承
+    // function Person(sleep){
+    //   this.sleep = sleep
+    // }
+    // Person.prototype.name = "张三"
+    // Person.prototype.age = 20
+    // Person.prototype.say = () => {
+    //   console.log("person say")
+    // }
+    // function Student() {
+    // }
+    // Student.prototype.education = "本科"
+    // for (let key in Person.prototype) {
+    //   Student.prototype[key] = Person.prototype[key]
+    // }
+    // let stu = new Student()
+    // console.log(stu)
+    // stu.say()
+
+    // 直接继承
+    // 优点效率比较高
+    // function Person() {
+    // }
+    // Person.prototype.name = "张三"
+    // Person.prototype.say = () => {
+    //   console.log("person say")
+    // }
+    // function Student() {
+    // }
+    // Student.prototype = Person.prototype
+    // Student.prototype.age = 100
+    // Student.prototype.play = () => {
+    //   console.log("student play")
+    // }
+    // let stu = new Student()
+    // console.log(stu)
+
+    // 利用控对象作中介，实现继承
+    // function Person(name, age) {
+    //   this.name = name;
+    //   this.age = age;
+    // }
+    // Person.prototype.say = () => {
+    //   console.log("person say");
+    // };
+    // let F = function () {};
+    // function Student(education) {
+    //   this.education = education;
+    // }
+    // F.prototype = new Person("张三", 20);
+    // Student.prototype = F.prototype;
+    // let stu = new Student("教育");
+    // console.log(stu);
+
+    // test demo
+    // function father(name, age) {
+    //   this.name = name;
+    //   this.age = age;
+    // }
+    // father.prototype.education = "";
+    // father.prototype.say = function () {
+    //   console.log(this, this.name, this.age);
+    // };
+    // const children1 = new father("张三", 15);
+    // const children2 = new father("李四", 15);
+    // console.log(children2);
+    // children2.say();
+
+    function father(name, age) {
+      this.name = name;
+      this.age = age;
+    }
+    father.prototype.colors = ["red"];
+    father.prototype.say = function () {
+      console.log(this, this.name, this.age);
+    };
+    const children1 = new father("张三", 15);
+    children1.colors.push("123");
+    const children2 = new father("李四", 15);
+    console.log(children1.colors, children2.colors);
+    children2.say();
+  </script>
+</html>

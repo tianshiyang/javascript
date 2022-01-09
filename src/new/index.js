@@ -15,14 +15,21 @@ function myNew(fn, ...args) {
 
 // demo
 function Person(firtName, lastName) {
+  this.age = 12;
   this.firtName = firtName;
   this.lastName = lastName;
 }
 Person.prototype.getFullName = function () {
-  return `${this.firtName} ${this.lastName}`;
+  console.log(Person.age)
+  this.age += 1;
+  console.log(`${this.firtName} ${this.lastName}, ${this.age}`);
 };
 const tsy = new Person("田", "世洋");
-console.log("tsy", tsy);
+const zs = new Person("张", "三");
+// tsy.getFullName();
+// zs.getFullName();
 
 const tsy2 = myNew(Person, "田", "世洋");
-console.log("tsy2", tsy2);
+const zs2 = myNew(Person, "zhang", "san");
+tsy2.getFullName();
+zs2.getFullName();
