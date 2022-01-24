@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>debounce</title>
+    <style>
+      #box {
+        width: 1000px;
+        height: 500px;
+        background: #ccc;
+        font-size: 40px;
+        text-align: center;
+        line-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+  </body>
+  <script>
+    const box = document.getElementById("box");
+    box.onmousemove = throttle(function (e) {
+      box.innerHTML = `${e.clientX}, ${e.clientY}`;
+    }, 1500);
+
+    function throttle(func, delay) {
+      let currentTime = new Date().getTime();
+      return function () {
+        if (new Date().getTime() - currentTime > delay) {
+          func.apply(this, arguments);
+          currentTime = new Date().getTime();
+        }
+      };
+    }
+  </script>
+</html>
