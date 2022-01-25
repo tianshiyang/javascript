@@ -26,6 +26,7 @@ class MyPromise {
     }
   };
   then(onFulfilledCallBack, onRejectedCallBack) {
+    onFulfilledCallBack ? onFulfilledCallBack : this.value;
     const p2 = new MyPromise((resolve, reject) => {
       if (this.status === "fulfilled") {
         queueMicrotask(() => {
@@ -69,5 +70,57 @@ class MyPromise {
       resolve(x);
     }
   }
+  // resolve静态方法
+  static resolve = (value) => {
+    if (value && value instanceof MyPromise) {
+      return value;
+    }
+    return new MyPromise((resolve, reject) => {
+      resolve(value);
+    });
+  };
+
+  // all resolve实现形式
+  // static all = (arr) => {
+  //   return new MyPromise((resolve, reject) => {
+  //     if (!arr.length) {
+  //       resolve([]);
+  //       return;
+  //     }
+  //     let count = 0;
+  //     let result = [];
+  //     arr.forEach((res, index) => {
+  //       MyPromise.resolve(res).then((val) => {
+  //         count++;
+  //         result[index] = val;
+  //         if (count === arr.length) {
+  //           resolve(result);
+  //         }
+  //       });
+  //     });
+  //   });
+  // };
+
+  // all 非resolve实现方式
+  static all = (arr) => {
+    return new MyPromise((resolve, reject) => {
+      if (!arr.length) {
+        return [];
+      }
+      let count = 0;
+      let result = [];
+      arr.forEach((item, index) => {
+        if (item instanceof MyPromise) {
+          item.then((value) => {
+            count++;
+            result.push(value);
+            if (count === arr.length) {
+              resolve(result);
+            }
+          });
+        }
+      });
+    });
+  };
 }
 module.exports = MyPromise;
