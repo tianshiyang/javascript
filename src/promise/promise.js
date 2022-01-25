@@ -81,46 +81,63 @@ class MyPromise {
   };
 
   // all resolve实现形式
+  static all = (arr) => {
+    return new MyPromise((resolve, reject) => {
+      if (!arr.length) {
+        resolve([]);
+        return;
+      }
+      let count = 0;
+      let result = [];
+      arr.forEach((res, index) => {
+        MyPromise.resolve(res).then((val) => {
+          count++;
+          result[index] = val;
+          if (count === arr.length) {
+            resolve(result);
+          }
+        });
+      });
+    });
+  };
+
+  // race
+  static race = (arr) => {
+    return new MyPromise((resolve, reject) => {
+      if (!arr.length) {
+        resolve([]);
+        return;
+      }
+      arr.forEach((item, index) => {
+        MyPromise.resolve(item).then((res) => {
+          resolve(res);
+          return;
+        });
+      });
+    });
+  };
+
+  // // all 非resolve实现方式
   // static all = (arr) => {
   //   return new MyPromise((resolve, reject) => {
   //     if (!arr.length) {
   //       resolve([]);
-  //       return;
+  //       return
   //     }
   //     let count = 0;
   //     let result = [];
-  //     arr.forEach((res, index) => {
-  //       MyPromise.resolve(res).then((val) => {
-  //         count++;
-  //         result[index] = val;
-  //         if (count === arr.length) {
-  //           resolve(result);
-  //         }
-  //       });
+  //     arr.forEach((item, index) => {
+  //       if (item instanceof MyPromise) {
+  //         item.then((value) => {
+  //           count++;
+  //           result.push(value);
+  //           if (count === arr.length) {
+  //             resolve(result);
+  //           }
+  //         });
+  //       }
   //     });
   //   });
   // };
-
-  // all 非resolve实现方式
-  static all = (arr) => {
-    return new MyPromise((resolve, reject) => {
-      if (!arr.length) {
-        return [];
-      }
-      let count = 0;
-      let result = [];
-      arr.forEach((item, index) => {
-        if (item instanceof MyPromise) {
-          item.then((value) => {
-            count++;
-            result.push(value);
-            if (count === arr.length) {
-              resolve(result);
-            }
-          });
-        }
-      });
-    });
-  };
 }
 module.exports = MyPromise;

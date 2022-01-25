@@ -41,7 +41,7 @@ const MyPromise = require("./promise.js");
 //     console.log(res);
 //   });
 
-const p1 = MyPromise.resolve(1);
+const p1 = Promise.resolve(1);
 const p2 = new MyPromise((resolve) => {
   setTimeout(() => resolve(2), 1000);
 });
@@ -49,4 +49,4 @@ const p3 = new MyPromise((resolve) => {
   setTimeout(() => resolve(3), 3000);
 });
 // 1. 所有的Promise都成功了
-const p11 = MyPromise.all([p1, p2, p3]).then(console.log); // [ 1, 2, 3 ]
+const p11 = MyPromise.race([p1, p2, p3]).then(console.log); // [ 1, 2, 3 ]
