@@ -37,8 +37,8 @@ const obj1 = {
 const obj2 = {
   sayName: function (age, edu) {
     console.log(`我是${this.name}, 今年${age}, ${edu}学`);
-  }.myCall2(obj1, 22, "大学"),
+  },
 };
 // obj1.sayName();
-// obj2.sayName();
-obj2.sayName;
+obj2.sayName.myCall2(obj1, 22, "大学");
+// obj2.sayName;
