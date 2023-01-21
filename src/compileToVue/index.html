@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <header>
+  </header>
+  <body>
+    <div id="testToComplie"></div>
+  </body>
+  <script>
+
+    let data = {
+      isOk: true,
+      name: "张三",
+      age: 12
+    }
+
+    const bucket = new WeakMap()
+
+    let activeEffect
+    function effect(fn) {
+      const effectFn = () => {
+        cleanup(effectFn)
+        activeEffect = effectFn
+        fn()
+      }
+      effectFn.deps = []
+      effectFn()
+    }
+
+    function cleanup(effectFn) {
+      for (let i = 0; i < effectFn.deps.length; i++) {
+        const deps = effectFn.deps[i]
+        deps.delete(effectFn)
+      }
+      effectFn.deps.length = 0
+    }
+
+    const obj = new Proxy(data, {
+      get(target, key) {
+        console.log("get")
+        track(target, key)
+        return target[key]
+      },
+      set(target, key, newVal) {
+        target[key] = newVal
+        trigger(target, key)
+      }
+    })
+
+    function track(target, key) {
+      if (!activeEffect) return
+      let depsMap = bucket.get(target)
+      if (!depsMap) {
+        bucket.set(target, (depsMap = new Map()))
+      }
+      let deps = depsMap.get(key)
+      if(!deps) {
+        depsMap.set(key, (deps = new Set()))
+      }
+      deps.add(activeEffect)
+      activeEffect.deps.push(deps)
+      console.log(activeEffect)
+    }
+
+    function trigger(target, key) {
+      const depsMap = bucket.get(target)
+      if (!depsMap) return
+      const effects = depsMap.get(key)
+      const effectsToRun = new Set(effects)
+      effectsToRun.forEach(effectFn => effectFn())
+      // effects && effects.forEach(fn => {
+      //   fn()
+      // });
+    }
+
+    effect(function effectFn() {
+      document.body.innerHTML = obj.isOk ? obj.name : "not"
+    })
+
+    setTimeout(() => {
+      obj.isOk = false
+    }, 1000)
+
+
+    let bucket1 = new WeakMap()
+    bucket1.set(data, new Map())
+    console.log(bucket1)
+    delete data.isOk
+    console.log(data)
+    console.log(bucket1, 1111111)
+  </script>
+</html>
