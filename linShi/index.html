@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>debounce</title>
+    <style>
+      #box {
+        width: 1000px;
+        height: 500px;
+        background: #ccc;
+        font-size: 40px;
+        text-align: center;
+        line-height: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="box"></div>
+  </body>
+  <script>
+    const box = document.getElementById("box");
+    box.onmousemove = function () {
+      let a = 1;
+      a++;
+      console.log(a);
+    };
+    // box.onmousemove = debounce(function (e) {
+    //   box.innerHTML = `${e.clientX}, ${e.clientY}`;
+    // }, 500);
+
+    // 非立即执行版本
+    // function debounce(func, delay) {
+    //   let timeout = null;
+    //   return function () {
+    //     if (timeout) {
+    //       clearTimeout(timeout);
+    //     }
+    //     timeout = setTimeout(() => {
+    //       func.apply(this, arguments);
+    //       timeout = null;
+    //     }, delay);
+    //   };
+    // }
+
+    function debounce(func, delay) {
+      let timeout = null;
+      return function () {
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+        let callNow = !timeout;
+        timeout = setTimeout(() => {
+          timeout = null;
+        }, delay);
+        if (callNow) {
+          func.apply(this, arguments);
+        }
+      };
+    }
+  </script>
+</html>

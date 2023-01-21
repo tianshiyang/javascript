@@ -14,6 +14,18 @@ Function.prototype.myCall = function (_this) {
   return result;
 };
 
+// 方式2
+Function.prototype.myCall2 = function (_this, ...args) {
+  if (typeof this !== "function") {
+    throw new TypeError("调用者不是一个方法");
+  }
+  context = _this || window;
+  context.fn = this;
+  let result = context.fn(...args);
+  delete context.fn;
+  return result;
+};
+
 // demo
 const obj1 = {
   name: "张三",
@@ -23,11 +35,10 @@ const obj1 = {
 };
 
 const obj2 = {
-  sayName: function () {
-    console.log(`我是${this.name}`);
+  sayName: function (age, edu) {
+    console.log(`我是${this.name}, 今年${age}, ${edu}学`);
   },
 };
-
 // obj1.sayName();
-// obj2.sayName();
-obj2.sayName.myCall(obj1, "name");
+obj2.sayName.myCall2(obj1, 22, "大学");
+// obj2.sayName;

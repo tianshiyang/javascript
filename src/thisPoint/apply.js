@@ -14,6 +14,20 @@ Function.prototype.myApply = function (_this) {
   return result;
 };
 
+// 方式2
+Function.prototype.myApply2 = function (_this, args) {
+  if (typeof this !== "function") {
+    throw TypeError("调用者不是一个方法");
+  }
+  if (!Array.isArray(args)) {
+    throw TypeError("参数应是个数组");
+  }
+  _this = _this || window;
+  _this.fn = this;
+  let result = _this.fn(...args);
+  delete _this.fn;
+  return result;
+};
 // demo
 const obj1 = {
   name: "张三",
@@ -27,4 +41,4 @@ const obj2 = {
   },
 };
 
-obj2.sayName.myApply(obj1, [22, "打篮球"]);
+obj2.sayName.myApply2(obj1, [22, "打篮球"]);
