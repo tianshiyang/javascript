@@ -1,5 +1,6 @@
 function curry(fn, ...args) {
   console.log(fn.length)
+  
   return fn.length <= args.length ? fn(...args) : curry.bind(null, fn, ...args);
 }
 
