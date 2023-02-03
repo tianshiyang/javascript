@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      img {
+            display: block;
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+        }
+    </style>
+  </head>
+  <body>
+    <img data-src="../images/1.jpg" />
+    <img data-src="../images/3.jpg" />
+    <img data-src="../images/5.jpg" />
+    <img data-src="../images/7.jpg" />
+    <img data-src="../images/10.jpg" />
+    <img data-src="../images/11.jpg" />
+  </body>
+  <script>
+    let imgs = document.querySelectorAll("img")
+    function onLazyOnLoad(imgs) {
+      let images = [...imgs]
+      let clientHeight = document.documentElement.clientHeight
+      let scrollTop = document.documentElement.scrollTop
+      for (let i = 0; i < images.length; i ++) {
+        if (imgs[i].offsetTop <= clientHeight + scrollTop) {
+          imgs[i].src = imgs[i].getAttribute("data-src")
+        }
+      }
+    }
+    window.onload = window.onscroll = function() {
+      onLazyOnLoad(imgs)
+    }
+    
+  </script>
+</html>
