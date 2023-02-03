@@ -14,3 +14,10 @@ const getJSON = function(url) {
       xhr.send();
   })
 }
+
+
+let a = {name: 1232}
+
+export {
+    a
+}

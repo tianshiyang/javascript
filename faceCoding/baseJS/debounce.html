@@ -1,39 +1,45 @@
 <!DOCTYPE html>
 <html>
-  <header>
+  <head>
     <style>
-      .bg {
-        width: 100%;
-        height: 100vh;
-        background-color: aqua;
-        text-align: center;
-        margin: auto 0;
-        font-size: 36px;
+      #myDebounce {
+        width: 500px;
+        height: 500px;
+        background: red;
       }
     </style>
-  </header>
+  </head>
   <body>
-    <div id="test" class="bg"></div>
-  </body>
-  <script>
-    function debounce(fn) {
-      let timer = null
-      return function () {
-        if (timer) {
-          clearTimeout(timer)
-        }
-        timer = setTimeout(() => {
-          fn()
-          timer = null
-        }, 200)
-      }
-    }
+    <div id="myDebounce"></div>
+    <script>
+      let myDebounce = document.getElementById("myDebounce")
+      let count = 0
+      myDebounce.addEventListener("mousemove", throttle(function () {
+        console.log(++count)
+      }))
 
-    const box = document.getElementById("test");
-    let count = 1
-    box.onmousemove = debounce(function () {
-      count ++
-      console.log(count)
-    })
-  </script>
+      function debounce(fn) {
+        let timer = null
+        return function () {
+          if (timer) {
+            clearTimeout(timer)
+          }
+          timer = setTimeout(() => {
+            fn()
+          }, 100)
+        }
+      }
+
+      function throttle (fn) {
+        let beforeTime = new Date().getTime()
+        return () => {
+          let currentTime = new Date().getTime()
+          if (currentTime - beforeTime > 3000) {
+            fn()
+            beforeTime = new Date().getTime()
+          }
+        }
+      }
+    </script>
+  </body>
 </html>
