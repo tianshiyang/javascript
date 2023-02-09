@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .router-nav {
+        width: 400px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 24px;
+        position: fixed;
+        bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: red;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <mian id="content"></mian>
+    <nav class="router-nav">
+      <a href="#/">默认页面</a>
+      <a href="#/mine">我的</a>
+      <a href="#/car">购物车</a>
+      <a href="#/order">订单</a>
+    </nav>
+  </body>
+  <script>
+    class MyRouter {
+      constructor(router = []) {
+        this.router = router
+        this.routerChange = this.routerChange.bind(this)
+        window.addEventListener("load", this.routerChange)
+        window.addEventListener("hashchange", this.routerChange)
+      }
+      transformURL(str) {
+        return "/" + str.split("#/")[1]
+      }
+      routerChange(e) {
+        let oldURL = ""
+        let newURL = null
+        if (e.newURL) {
+          newURL = this.transformURL(e.newURL)
+          oldURL = this.transformURL(e.oldURL)
+        } else {
+          newURL = window.location.hash.charAt(1)
+        }
+        if (newURL !== oldURL) {
+          let currentRouter = this.router.filter(res => res.path === newURL)[0]
+          if (currentRouter) {
+            this.reflushPage(currentRouter)
+          }
+        }
+      }
+      reflushPage(currentRouter) {
+        document.getElementById("content").innerHTML = currentRouter.component
+      }
+      updateComponet() {}
+    }
+    const router = [
+      {
+        path: "/",
+        component: "默认页面"
+      },
+      {
+        path: "/mine",
+        component: "这是我的"
+      },
+      {
+        path: "/car",
+        component: "这是购物车"
+      },
+      {
+        path: "/order",
+        component: "这是订单"
+      }
+    ]
+    new MyRouter(router)
+  </script>
+</html>

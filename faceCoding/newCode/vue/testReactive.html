@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+
+  </body>
+  <script>
+    let bucked = new WeakMap()
+    let activeEffect = null
+
+    function track(target, key) {
+      if (!activeEffect) {
+        return
+      }
+      let targetMap = bucked.get(target)
+      if (!targetMap) {
+        bucked.set(target, targetMap = new Map())
+      }
+      let dep = targetMap.get(key)
+      if (!dep) {
+        targetMap.set(key, dep = new Set())
+      }
+      dep.add(activeEffect)
+      activeEffect.deps.push(dep)
+    }
+
+    function trigger(target, key) {
+      let targetMap = bucked.get(target)
+      if (!targetMap) {
+        return
+      }
+      let dep = targetMap.get(key)
+      if (dep) {
+        const depsToRun = new Set(dep)
+
+        depsToRun.forEach(effect => {
+          effect()
+        })
+      }
+    }
+
+    function effect(callBack) {
+      const effectFn = () => {
+        cleanup(effectFn)
+        activeEffect = effectFn
+        callBack()
+      }
+      effectFn.deps = []
+      effectFn()
+    }
+
+    function cleanup(effectFn) {
+      for (let i = 0; i < effectFn.deps.length; i++) {
+        const deps = effectFn.deps[i]
+        deps.delete(effectFn)
+      }
+      effectFn.deps.length = 0
+    }
+
+    function reactive(obj) {
+      let handler = {
+        get(target, key, reciver) {
+          let result = Reflect.get(target, key, reciver)
+          track(target, key)
+          if (typeof result === "object" && target !== null) {
+            reactive(result)
+          }
+          return result
+        },
+        set(target, key, value, reciver) {
+          let oldValue = Reflect.get(target, key, reciver) 
+          let flag = true
+          console.log(key)
+          if (oldValue !== value) {
+            flag = Reflect.set(target, key, value, reciver)
+            trigger(target, key)
+          }
+          return flag
+        }
+      }
+      return new Proxy(obj, handler)
+    }
+
+    const obj = {
+      ok: true,
+      text: "hello world"
+    }
+    let reactiveObj = reactive(obj)
+    effect(() => {
+      document.body.innerHTML = reactiveObj.ok ? reactiveObj.text : "not"
+    })
+    setTimeout(() => {
+      reactiveObj.ok = false
+    }, 1000)
+    setTimeout(() => {
+      reactiveObj.text = 11111
+    }, 2000)
+  </script>
+</html>

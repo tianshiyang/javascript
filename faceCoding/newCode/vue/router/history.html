@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <div id="content"></div>
+    <button id="button1" onclick="push('/mine')">按钮1</button>
+    <button id="button2">按钮2</button>
+    <button id="button4">按钮3</button>
+    <script>
+      const button1 = document.getElementById("button1")
+      const button2 = document.getElementById("button2")
+      const button3 = document.getElementById("button3")
+  
+      
+      class MyRouter {
+        constructor(router = []) {
+          this.router = router
+        }
+        push(path) {
+          let currentRouter = this.router.filter(res => res.path === path)[0]
+          if (currentRouter) {
+            this.patchComponent(currentRouter.component)
+            history.pushState({state: 1}, null, path)
+          }
+        }
+        patchComponent(component) {
+          document.getElementById("content").innerHTML = component
+        }
+      }
+      
+      let router = new MyRouter([{
+          path: "/",
+          component: "默认页面"
+        },
+        {
+          path: "/mine",
+          component: "这是我的"
+        },
+        {
+          path: "/car",
+          component: "这是购物车"
+        },
+        {
+          path: "/order",
+          component: "这是订单"
+        }]
+      )
+      function push(path) {
+        router.push(path)
+      }
+    </script>
+  </body>
+  
+</html>

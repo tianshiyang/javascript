@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <div id="root">
+      <span class="aa">
+        <a></a>
+        <a></a>
+      </span>
+      <div>
+        <p></p>
+      </div>
+    </div>
+    
+    <script>
+      let root = document.getElementById("root")
+      function DomToVnode(node) {
+        let result = {}
+        let attrs = {}
+        let attrsArray = [...node.attributes].forEach(res => {
+          attrs[res.nodeName] = res.nodeValue
+        })
+        result.tagName = node.tagName
+        result.attrs = attrs
+        result.children = []
+        
+        let childrenDom = [...node.children]
+        if (childrenDom.length) {
+          for (let i = 0; i < childrenDom.length; i ++) {
+            result.children.push(DomToVnode(childrenDom[i]))
+          }
+        }
+        return result  
+      }
+      console.log(DomToVnode(root))
+    </script>
+  </body>
+</html>

@@ -62,7 +62,7 @@ class MyPromise {
     if (p === x) {
       return reject("error")
     }
-    if (resolve instanceof MyPromise) {
+    if (x instanceof MyPromise) {
       x.then(resolve, reject)
     } else {
       resolve(x)
@@ -124,6 +124,6 @@ const p3 = new MyPromise((resolve) => {
   setTimeout(() => resolve(3), 3000);
 });
 // 1. 所有的Promise都成功了
-const p11 = MyPromise.race([p1, p2, p3]).then(res => {
+const p11 = MyPromise.all([p1, p2, p3]).then(res => {
   console.log(res)
 }); // [ 1, 2, 3 ]

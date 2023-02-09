@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script>
+    let vnode = {
+      tag: 'DIV',
+      attrs:{
+        id:'app'
+      },
+      children: [
+        {
+          tag: 'SPAN',
+          children: [
+            { tag: 'A', children: [] }
+          ]
+        },
+        {
+          tag: 'SPAN',
+          children: [
+            { tag: 'A', children: [] },
+            { tag: 'A', children: [] }
+          ]
+        }
+      ]
+    }
+
+    function transformToDom(vnode, el) {
+      let tagDom = document.createElement(vnode.tag)
+      if (vnode.attrs) {
+        for (let key in vnode.attrs) {
+          tagDom.setAttribute(key, vnode.attrs[key])
+        }
+      }
+      el.appendChild(tagDom)
+      if (vnode.children.length) {
+        for (let i = 0; i < vnode.children.length; i ++) {
+          transformToDom(vnode.children[i], tagDom)
+        }
+      }
+    }
+
+    transformToDom(vnode, document.getElementById("root"))
+
+  </script>
+</html>
