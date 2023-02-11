@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <input type="text" v-mode="msg" oninput="changeValue" />
+    <p v-mode="msg"></p>
+  </body>
+
+  <script src="./reactive.js"></script>
+  <script>
+    const data = reactive({
+      msg: "你好",
+    })
+    const input = document.querySelector("input");
+    const p = document.querySelector("p");
+    
+
+    input.oninput = (e) => {
+      data.msg = input.value
+      effect(() => {
+        input.value = data.msg;
+        p.innerHTML = data.msg;
+      })
+    }
+    
+    
+  </script>
+</html>

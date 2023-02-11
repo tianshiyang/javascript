@@ -70,20 +70,21 @@ function computed(fn) {
   return result
 }
 
-const obj = {
-  name: "张三",
-  age: 25,
-  other: {
-    sex: "男",
-    birthday: "11111"
-  }
-}
+// const obj = {
+//   name: "张三",
+//   age: 25,
+//   other: {
+//     sex: "男",
+//     birthday: "11111"
+//   }
+// }
 
-effect(() => {
-  delete obj.age
-})
+// effect(() => {
+//   delete obj.age
+// })
 
-const obj1 = reactive(obj)
-obj1.name = "王五"
-obj1.other.sex = "nv"
-console.log(obj)
+// const obj1 = reactive(obj)
+// obj1.name = "王五"
+// obj1.other.sex = "nv"
+// console.log(obj)
+
