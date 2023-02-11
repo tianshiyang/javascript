@@ -16,13 +16,14 @@ Function.prototype.myCall = function (_this) {
 
 // 方式2
 Function.prototype.myCall2 = function (_this, ...args) {
+  console.log(this)
   if (typeof this !== "function") {
     throw new TypeError("调用者不是一个方法");
   }
-  context = _this || window;
-  context.fn = this;
-  let result = context.fn(...args);
-  delete context.fn;
+  _this = _this || window;
+  _this.fn = this;
+  let result = _this.fn(...args);
+  delete _this.fn;
   return result;
 };
 
