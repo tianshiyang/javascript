@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <div id="dom">
+      <span></span>
+      <ul>
+          <li></li>
+          <li></li>
+      </ul>
+    </div>
+  </body>
+  <script>
+    let root = document.getElementById("dom")
+    function transformVNode(node) {
+      let result = {}
+      result.tagName = node.tagName
+      if (node.children) {
+        // console.log(node.children)
+        result.children = [...node.children].map(res => transformVNode(res, result))
+      }
+      return result
+    }
+    console.log(transformVNode(root))
+  </script>
+</html>
