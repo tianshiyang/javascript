@@ -38,6 +38,7 @@ function effect(callBack) {
 function reactive(obj) {
   let handler = {
     get(target, key, reciver) {
+      // console.log("get - ", key)
       let result = Reflect.get(target, key, reciver)
       trigger(target, key)
       if (typeof result === "object" && target !== null) {
@@ -46,11 +47,12 @@ function reactive(obj) {
       return result
     },
     set(target, key, value, reciver) {
+      // console.log("set - ", key)
       let oldValue = Reflect.get(target, key, reciver) 
       let flag = true
       if (oldValue !== value) {
-        track(target, key)
         flag = Reflect.set(target, key, value, reciver)
+        track(target, key)
       }
       return flag
     }
@@ -78,13 +80,13 @@ function computed(fn) {
 //     birthday: "11111"
 //   }
 // }
-
-// effect(() => {
-//   delete obj.age
-// })
-
+// let count = 0 
 // const obj1 = reactive(obj)
+// let strchange = `obj.name = ${obj1.name}`
+// effect(() => {
+//   strchange = `obj.name = ${obj1.name}` + count ++
+// })
 // obj1.name = "王五"
-// obj1.other.sex = "nv"
-// console.log(obj)
+// console.log(strchange)
+
 

@@ -4,27 +4,27 @@
 
   </head>
   <body>
-    <input type="text" v-mode="msg" oninput="changeValue" />
+    <input type="text" v-mode="msg" />
     <p v-mode="msg"></p>
   </body>
 
   <script src="./reactive.js"></script>
   <script>
+    
     const data = reactive({
       msg: "你好",
     })
     const input = document.querySelector("input");
+    // 相当于执行v-on:value
+    input.value = data.msg
     const p = document.querySelector("p");
-    
-
-    input.oninput = (e) => {
+    p.innerText = data.msg
+    input.addEventListener("input", () => {
       data.msg = input.value
-      effect(() => {
-        input.value = data.msg;
-        p.innerHTML = data.msg;
-      })
-    }
-    
-    
+    })
+
+    effect(() => {   
+      p.innerText = data.msg
+    })
   </script>
 </html>
