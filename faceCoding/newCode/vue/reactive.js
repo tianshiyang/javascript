@@ -42,7 +42,7 @@ function reactive(obj) {
       let result = Reflect.get(target, key, reciver)
       trigger(target, key)
       if (typeof result === "object" && target !== null) {
-        reactive(result)
+        return reactive(result)
       }
       return result
     },

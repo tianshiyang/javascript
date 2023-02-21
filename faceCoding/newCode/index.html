@@ -3,25 +3,44 @@
   <head>
   </head>
   <body>
-    <div id="dom">
-      <span></span>
-      <ul>
-          <li></li>
-          <li></li>
-      </ul>
-    </div>
+    <div id="main"></div>
+    <a href="#/">默认</a>
+    <a href="#/pageA">a page</a>
+    <a href="#/pageB">b page</a>
   </body>
   <script>
-    let root = document.getElementById("dom")
-    function transformVNode(node) {
-      let result = {}
-      result.tagName = node.tagName
-      if (node.children) {
-        // console.log(node.children)
-        result.children = [...node.children].map(res => transformVNode(res, result))
+    let main = document.getElementById("main")
+    class Router {
+      constructor(router) {
+        this.router = router
+        this.init()
       }
-      return result
+      hashChange(e) {
+        let oldURL = "/" + e?.oldURL?.split("#/")[1]
+        console.log(window.location.hash.slice(1))
+        let newURL = e.newURL ? "/" + e.newURL.split("#/")[1] : window.location.hash.slice(1)
+        if (oldURL !== newURL) {
+          let component = this.router.filter((router) => router.path === newURL)[0].component
+          main.innerText = component
+        }
+      }
+      init() {
+        window.addEventListener("hashchange", this.hashChange.bind(this))
+        window.addEventListener("load", this.hashChange.bind(this))
+      }
     }
-    console.log(transformVNode(root))
+    let router = [
+      {
+        path: "/",
+        component: "default"
+      }, {
+        path: "/pageA",
+        component: "this is page1"
+      }, {
+        path: "/pageB",
+        component: "this is page2"
+      }
+    ]
+    new Router(router)
   </script>
 </html>
