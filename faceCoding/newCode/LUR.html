@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .historyRecord {
+        display: flex;
+        width: 50%;
+        height: 100px;
+        justify-content: space-around;
+        align-items: center;
+        background-color: antiquewhite;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div>
+      <ol id="orderList">
+        <li currentKey="a">订单1</li>
+        <li currentKey="b">订单2</li>
+        <li currentKey="c">订单3</li>
+        <li currentKey="d">订单4</li>
+        <li currentKey="e">订单5</li>
+      </ol>
+    </div>
+    <h1>历史记录</h1>
+    <div>
+      <ol id="ol"></ol>
+    </div>
+  </body>
+  <script>
+    class LUR {
+      constructor(max) {
+        this.max = max
+        this.init()
+      }
+      init() {
+        this.cacheArr = JSON.parse(localStorage.getItem("cacheArr")) || []
+        this.cacheObj = JSON.parse(localStorage.getItem("cacheObj")) || {}
+        this.reflushViews()
+      }
+      change(key, value) {
+        if (this.cacheObj[key] && this.cacheObj[key] === value) {
+          this.get(key)
+        } else {
+          this.set(key, value)
+        }
+      }
+      get(key) {
+        let index = this.cacheArr.indexOf(key)
+        this.cacheArr.splice(index, 1)
+        this.cacheArr.unshift(key)
+        localStorage.setItem("cacheArr", JSON.stringify(this.cacheArr))
+        this.reflushViews()
+      }
+      set(key, value) {
+        if (!this.cacheObj[key]) {
+          if (this.cacheArr.length < this.max) {
+            this.cacheArr.unshift(key)
+            this.cacheObj[key] = value
+          } else {
+            let deleteKey = this.cacheArr.pop()
+            delete this.cacheObj[deleteKey]
+          }
+        } else {
+          this.get(key)
+          this.cacheObj[key] = value
+        }
+        console.log(this.cacheArr)
+        localStorage.setItem("cacheArr", JSON.stringify(this.cacheArr))
+        localStorage.setItem("cacheObj", JSON.stringify(this.cacheObj))
+        this.reflushViews()
+      }
+      reflushViews() {
+        let el = document.getElementById("ol")
+        el.innerText = ""
+        let html = ""
+        for (let i = 0; i < this.cacheArr.length; i ++) {
+          html += `<li>${this.cacheObj[this.cacheArr[i]]}</li>`
+        }
+        el.innerHTML = html
+      }
+    }
+
+    let lur = new LUR(2)
+
+    let orderList = document.getElementById("orderList")
+    orderList.addEventListener("click", (e) => {
+      let value = e.target.innerHTML
+      let key = e.target.attributes.currentKey.value
+      lur.change(key, value)
+    })
+  </script>
+</html>
