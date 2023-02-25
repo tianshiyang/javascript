@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <input value="" id="input" />
+    <p id="p"></p>
+  </body>
+  <script>
+    let bucket = new WeakMap()
+    let activeEffect = null
+
+    let effect = (fn) => {
+      activeEffect = fn
+      fn()
+      activeEffect = null
+    }
+
+    function trigger(target, key) {
+      if (!activeEffect) {
+        return
+      }
+      let bucketMap = bucket.get(target)
+      if (!bucketMap) {
+        bucket.set(target, bucketMap = new Map())
+      }
+      let deps = bucketMap.get(key)
+      if (!deps) {
+        bucketMap.set(key, deps = new Set())
+      }
+      deps.add(activeEffect)
+    }
+
+    let track = (target, key) => {
+      let bucketMap = bucket.get(target)
+      if (!bucketMap) {
+        return
+      }
+      let deps = bucketMap.get(key)
+      if (!deps) {
+        return
+      }
+      deps.forEach(effect => {
+        effect()
+      })
+    }
+
+    let reactive = (obj) => {
+      let handler = {
+        get(target, key, reciver) {
+          trigger(target, key)
+          let result = Reflect.get(target, key)
+          if (typeof result === "object" && result) {
+            return reactive(result)
+          }
+          return result
+        },
+
+        set(target, key, value, reciver) {
+          let result = false
+          let oldValue = Reflect.get(target, key)
+          if (oldValue === value) {
+            return result
+          }
+          result = Reflect.set(target, key, value)
+          track(target, key)
+          return result
+        }
+      }
+      return new Proxy(obj, handler)
+    }
+
+    let data = reactive({
+      name: "zhangsan",
+      other: {
+        msg: "this is input"
+      }
+    })
+
+    const input = document.getElementById("input")
+    const p = document.getElementById("p")
+    // input.value = data.other.msg
+    effect(() => {
+      input.value = data.other.msg
+      p.innerHTML = data.other.msg
+    })
+    input.addEventListener("input", (e) => {
+      data.other.msg = input.value
+    })
+  </script>
+</html>
