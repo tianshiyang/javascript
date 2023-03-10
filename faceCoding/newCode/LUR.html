@@ -87,7 +87,7 @@
     let orderList = document.getElementById("orderList")
     orderList.addEventListener("click", (e) => {
       let value = e.target.innerHTML
-      let key = e.target.attributes.currentKey.value
+      let key = e.target.getAttribute("currentKey")
       lur.change(key, value)
     })
   </script>
