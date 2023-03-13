@@ -1,12 +1,15 @@
-function http(method, url) {
-    let xhr = new XMLHttpRequest()
-    xhr.open(method, url)
-    xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.onreadystatechange = function () {
-        if (this.readyState !== 4) {
-            return
+var compress = function(chars) {
+    let result = []
+    let i = 0
+    while (i < chars.length) {
+        let curIndex = i
+        while (chars[i] === chars[curIndex] && curIndex < chars.length - 1) {
+            curIndex ++
         }
-        if (this.status == 300)
+        result.push(chars[i], curIndex - i)
+        i = curIndex
     }
-    xhr.send()
-}
+    return result
+};
+
+console.log(compress(["a","a","b","b","c","c","c"]))

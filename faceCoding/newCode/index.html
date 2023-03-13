@@ -8,81 +8,63 @@
         justify-content: space-between;
         background-color: red;
         width: 500px;
+        height: 500px;
       }
     </style>
   </head>
   <body>
-    <ul>
-      <li index="1">节点1</li>
-      <li index="2">节点2</li>
-      <li index="3">节点3</li>
-      <li index="4">节点4</li>
-    </ul>
-    <hr />
     <div id="main"></div>
+    <button onclick="changePath('/one')">页面1</button>
+    <button onclick="changePath('/two')">页面2</button>
+    <button onclick="changePath('/three')">页面3</button>
   </body>
   <script>
-    class LUR {
-      constructor(max, el) {
+    class Router {
+      constructor(router, el) {
         this.el = el
-        this.max = max
-        if (!localStorage.getItem("cacheArr")) {
-          localStorage.setItem("cacheArr", JSON.stringify([]))
-        }
-        if (!localStorage.getItem("cacheObj")) {
-          localStorage.setItem("cacheObj", JSON.stringify({}))
-        }
-        this.cacheArr = JSON.parse(localStorage.getItem("cacheArr"))
-        this.cacheObj = JSON.parse(localStorage.getItem("cacheObj"))
+        this.router = router
+        this.init()
       }
-      get(key) {
-        if (this.cacheObj[key]) {
-          let index = this.cacheArr.indexOf(key)
-          this.cacheArr.splice(index, 1)
-          this.cacheArr.unshift(key)
-        }
-        localStorage.setItem("cacheArr", JSON.stringify(this.cacheArr))
+      init() {
+        window.addEventListener("hashchange", this.changeRouter.bind(this))
+        window.addEventListener("load", this.changeRouter.bind(this))
       }
-      set(key, value) {
-        if (this.cacheObj[key]) {
-          this.cacheObj[key] = value
-        } else {
-          if (this.cacheArr.length >= this.max) {
-            let key = this.cacheArr.pop()
-            delete this.cacheObj[key]
-          }
-          this.cacheArr.unshift(key)
-          this.cacheObj[key] = value
-        }
-        localStorage.setItem("cacheArr", JSON.stringify(this.cacheArr))
-        localStorage.setItem("cacheObj", JSON.stringify(this.cacheObj))
+      changeRouter(e) {
+        let oldURL = this.transform(e.oldURL ?? "#/")
+        let newURL = this.transform(e.newURL ?? "#/")
+        this.reflushViews(newURL)
       }
-      change(key, value) {
-        if (this.cacheObj[key]) {
-          this.get(key)
-        } else {
-          this.set(key, value)
-        }
-        this.reflushViews()
+      reflushViews(newURL) {
+        let component = this.router.filter(res => res.path === newURL)[0].component
+        this.el.innerHTML = component
       }
-      reflushViews() {
-        let str = ""
-        for (let i = 0; i < this.cacheArr.length; i ++) {
-          str += `<div>${this.cacheObj[this.cacheArr[i]]}</div>`
-        }
-        this.el.innerHTML = str
+      transform(url) {
+        return url.split("#/")[1]
+      }
+      push(path) {
+        location.hash = path
       }
     }
 
+    let router = new Router([
+      {
+        path: "",
+        component: "default"
+      },
+      {
+        path: "one",
+        component: "pageOne"
+      }, {
+        path: "two",
+        component: "pageTwo"
+      }, {
+        path: "three",
+        component: "pageThree"
+      }
+    ], document.getElementById("main"))
 
-    let ul = document.getElementsByTagName("ul")[0]
-    let main = document.getElementById("main")
- 
-    let lur = new LUR(2, main)
-    ul.addEventListener("click", (e) => {
-      let index = e.target.attributes.index.value
-      let value = e.target.innerHTML
-      lur.change(index, value)
-    })
+    function changePath(path) {
+      router.push(path)
+    }
   </script>
 </html>
